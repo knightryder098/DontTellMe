@@ -1,0 +1,10 @@
+.home_bg{
+  background-color: aqua;
+  background-image: url(../assets/home_bg.jpg);
+  /* background-image: image(); */
+  height: 92vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}

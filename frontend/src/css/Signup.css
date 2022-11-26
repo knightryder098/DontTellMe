@@ -1,0 +1,35 @@
+.signup__bg{
+  background-color: aqua;
+  background-image: url(../assets/signup.jpg);
+  height: 92vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}
+
+.sign_profile_pic_container{
+  height: 100px;
+  width: 100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.signup_profile_pic{
+  width: 100px;
+  border-radius: 50%;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid grey;
+
+}
+.plus_profile_pic{
+  position:absolute;
+  bottom: 0;
+  right: 10px;
+  color: green;
+  background: rgba(89, 211, 83, 0.548);
+  cursor: pointer;
+  z-index: 99;
+  border-radius: 50%;
+}
