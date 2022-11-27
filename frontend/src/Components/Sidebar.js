@@ -11,6 +11,7 @@ function Sidebar() {
           <ListGroup.Item key={id}>{room}</ListGroup.Item>
         )}
       </ListGroup>
+      <h1>Members</h1>
     </>
   );
 }

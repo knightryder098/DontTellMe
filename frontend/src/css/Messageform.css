@@ -1,0 +1,7 @@
+.message_form{
+  height: 80vh;
+  /* border: 1px solid gray; */
+  border-bottom: 2px dashed gray;
+  overflow-y: scroll;
+  margin-bottom: 20px;
+}

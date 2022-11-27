@@ -32,6 +32,7 @@ function Signup() {
     data.append("file", image);
     data.append("upload_preset", "wewzc2uw");
     try {
+      
       setUploadImg(true);
       let res = await fetch(
         "https://api.cloudinary.com/v1_1/dgbht4ypf/image/upload",
