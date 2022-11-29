@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { useSignupUserMutation } from "../services/appApi";
 import { Row, Col, Form, Button, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/Signup.css";
 import bot from "../assets/bot.jpg";
 import UploadRoundedIcon from "@mui/icons-material/UploadRounded";
@@ -11,12 +12,13 @@ function Signup() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signUpuser, { isLoading, error }] = useSignupUserMutation();
   const [pic, setPicurl] = useState("");
 
   const [image, setImage] = useState(null);
   const [preViewImg, setPreviewImg] = useState(null);
   const [uploadImg, setUploadImg] = useState(false);
-
+  const navigate = useNavigate();
   const validateImg = (e) => {
     const file = e.target.files[0];
     if (file.size >= 1048576) {
@@ -32,7 +34,6 @@ function Signup() {
     data.append("file", image);
     data.append("upload_preset", "wewzc2uw");
     try {
-      
       setUploadImg(true);
       let res = await fetch(
         "https://api.cloudinary.com/v1_1/dgbht4ypf/image/upload",
@@ -55,7 +56,20 @@ function Signup() {
     if (!image) return alert("Please Upload a profile picture!!");
     const url = await UploadImage(image);
     setPicurl(url);
-    console.log(url);
+    // console.log(url);
+    signUpuser({
+      firstname: firstName,
+      lastname: LastName,
+      username: userName,
+      email: email,
+      password: password,
+      imageslink: pic,
+    }).then(({ data }) => {
+      if (data) {
+        console.log(data);
+        navigate('/chat')
+      } else console.log(error);
+    });
   };
   return (
     <>
