@@ -13,7 +13,6 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [signUpuser, { isLoading, error }] = useSignupUserMutation();
-  const [pic, setPicurl] = useState("");
 
   const [image, setImage] = useState(null);
   const [preViewImg, setPreviewImg] = useState(null);
@@ -55,15 +54,14 @@ function Signup() {
     e.preventDefault();
     if (!image) return alert("Please Upload a profile picture!!");
     const url = await UploadImage(image);
-    setPicurl(url);
-    // console.log(url);
+    console.log(url);
     signUpuser({
       firstname: firstName,
       lastname: LastName,
       username: userName,
       email: email,
       password: password,
-      imageslink: pic,
+      imageslink: url,
     }).then(({ data }) => {
       if (data) {
         console.log(data);
