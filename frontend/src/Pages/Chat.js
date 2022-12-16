@@ -1,5 +1,5 @@
 import React from "react";
-import {Container,Row,Col} from 'react-bootstrap'
+import { Container, Row, Col } from "react-bootstrap";
 import Messageform from "../Components/Messageform";
 import Sidebar from "../Components/Sidebar";
 
@@ -9,15 +9,15 @@ function Chat() {
       <Container>
         <Row>
           <Col md={4}>
-            <Sidebar/>
+            <Sidebar />
           </Col>
           <Col md={8}>
-            <Messageform/>
+            <Messageform />
           </Col>
         </Row>
       </Container>
     </>
-  )
-} 
+  );
+}
 
 export default Chat;

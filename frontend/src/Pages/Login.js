@@ -1,29 +1,35 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLoginUserMutation } from "../services/appApi";
 import { Row, Col, Form, Button, Container } from "react-bootstrap";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/Login.css";
-
-
+import { useSelector } from "react-redux";
+import { AppContext } from "../context/appContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginUser,{isLoding,error}]=useLoginUserMutation()
-  const navigate=useNavigate();
+  const [loginUser, { isLoding, error }] = useLoginUserMutation();
+  const navigate = useNavigate();
+  const {socket}=useContext(AppContext)
+  const user = useSelector((state) => state.user);
   const handleLogin = (e) => {
     e.preventDefault();
     loginUser({
       email: email,
-      password: password
-    }).then(({data})=>{
-      if(data){
+      password: password,
+    }).then(({ data }) => {
+      if (data) {
         // console.log(data);
-        navigate('/chat')
+        socket.emit('new-user')
+        navigate("/chat");
       }
-    })
+    });
   };
 
+  if(user){
+    navigate('/chat')
+  }
   return (
     <>
       <Container>

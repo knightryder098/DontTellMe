@@ -1,13 +1,45 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import '../css/Messageform.css'
+import { AppContext } from "../context/appContext";
+import { useSelector } from "react-redux";
+import "../css/Messageform.css";
 function Messageform() {
+  const [messages, setMessages] = useState("");
+  const user = useSelector((state) => state.user);
+  const { socket,message, setMessage, privateMessage, currentRoom } =
+    useContext(AppContext);
+  const getFormatedDate = () => {
+    const date = new Date();
+    let year = date.getFullYear();
+    let month = (1 + date.getMonth()).toString();
+    month = month.length > 1 ? month : "0" + month;
+    let day = date.getDay();
+    day = day.length > 1 ? day : "0" + day;
+    return month + "/" + day + "/" + year;
+  };
+
+  const date = getFormatedDate();
+  
+    socket.off('room-messages').on('room-messages',(roomMessage)=>{
+      console.log(roomMessage);
+      setMessage(roomMessage)
+    })
+
   const handleMessageSend = (e) => {
     e.preventDefault();
+    if (!messages) return;
+    const today = new Date();
+    const minutes =
+      today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
+    const time = today.getHours() + ":" + minutes;
+    const roomId = currentRoom;
+    socket.emit("message-room", roomId, messages, user, time, date);
+    setMessages("");
   };
+
   return (
     <>
-      <div className="message_form"></div>
+      <div className="message_form">{date}</div>
       <Form onSubmit={handleMessageSend}>
         <Row>
           <Col md={11}>
@@ -15,6 +47,8 @@ function Messageform() {
               <Form.Control
                 type="text"
                 placeholder="Type your message"
+                value={messages}
+                onChange={(e) => setMessages(e.target.value)}
               ></Form.Control>
             </Form.Group>
           </Col>

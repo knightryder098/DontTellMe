@@ -2,20 +2,20 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Navbar, Container, Nav, NavDropdown, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import {useLogoutUserMutation} from '../services/appApi'
+import { useLogoutUserMutation } from "../services/appApi";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
 import logo from "../assets/logo.png";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 function Navigation() {
   const user = useSelector((state) => state.user);
-  const [logoutUser]=useLogoutUserMutation()
-  const navigate=useNavigate()
-  const handleLogout=(e)=>{
+  const [logoutUser] = useLogoutUserMutation();
+  const navigate = useNavigate();
+  const handleLogout = (e) => {
     e.preventDefault();
     logoutUser(user);
-    Navigate('/')
-  }
+    navigate("/");
+  };
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -25,7 +25,7 @@ function Navigation() {
               <img
                 src={logo}
                 style={{ width: 75, height: 75, borderRadius: "50%" }}
-                alt="logo"
+                alt="logo-main"
               />
               Don't Tell me !!
             </Navbar.Brand>
@@ -38,9 +38,14 @@ function Navigation() {
                   <Nav.Link>Login</Nav.Link>
                 </LinkContainer>
               )}
-              <LinkContainer to="/chat">
-                <Nav.Link>chat</Nav.Link>
-              </LinkContainer>
+
+              <div hidden={!user}>
+                <LinkContainer to="/chat">
+                  <Nav.Link>chat</Nav.Link>
+                </LinkContainer>
+              </div>
+              
+
               {user && (
                 <NavDropdown
                   title={
@@ -66,7 +71,7 @@ function Navigation() {
                     Setting
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item >
+                  <NavDropdown.Item>
                     <Button variant="danger" onClick={handleLogout}>
                       <LogoutIcon /> Logout
                     </Button>
