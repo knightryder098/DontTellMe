@@ -1,12 +1,12 @@
-import { retry } from "@reduxjs/toolkit/dist/query";
 import React, { useContext, useEffect } from "react";
-import { ListGroup } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { ListGroup, Col, Row } from "react-bootstrap";
+import { useSelector, useDispatch } from "react-redux";
 import { AppContext } from "../context/appContext";
-
+import { addNotification, resetNotification } from "../Functions/userSlice";
+import '../css/sidebar.css'
 function Sidebar() {
   const user = useSelector((state) => state.user);
-  const rooms = ["Discussion", "Tech", "Stock Market", "Announchments"];
+  const dispatch = useDispatch();
   const {
     socket,
     room,
@@ -15,20 +15,34 @@ function Sidebar() {
     setCurrentRoom,
     members,
     setMembers,
-    message,
-    setMessage,
     privateMessage,
     setPrivateMessage,
   } = useContext(AppContext);
 
+  const joinRoom = (room, isPublic = true) => {
+    if (!user) return alert("Please Login");
+
+    socket.emit("join-room", room, currentRoom);
+    setCurrentRoom(room);
+    if (isPublic) setPrivateMessage(null);
+
+    //notifications
+    dispatch(resetNotification(room));
+  };
+
+  socket.off("notifications").on("notifications", (room) => {
+    if (currentRoom !== room) dispatch(addNotification(room));
+  });
+
   useEffect(() => {
     if (user) {
-      setCurrentRoom(currentRoom);
+      setCurrentRoom("general");
       getRoom();
       socket.emit("join-room", "general");
       socket.emit("new-user");
     }
-  }, [currentRoom]);
+  }, [room,currentRoom]);
+
   socket.off("new-user").on("new-user", (payload) => {
     setMembers(payload);
   });
@@ -39,31 +53,21 @@ function Sidebar() {
       .then((data) => setRoom(data));
   };
 
-  const joinRoom = (room, isPublic = true) => {
-    
-    if (!user) return alert("Please Login");
-
-    socket.emit("join-room", room);
-    setCurrentRoom(room);
-    // alert(currentRoom)
-    if (isPublic) setPrivateMessage(null);
+  const orderId = (id1, id2) => {
+    if (id1 > id2) {
+      return id1 + "-" + id2;
+    } else {
+      return id2 + "-" + id1;
+    }
   };
-
-  const orderId=(id1,id2)=>{
-    if(id1>id2)
-    return id1+'-'+id2;
-    else
-    return id2+'-'+id1;
-  }
 
   const handleMemberMSG = (member) => {
     setPrivateMessage(member);
-    const roomId=orderId(user._id,member._id);
-    joinRoom(roomId,false);
+    const roomId = orderId(user._id, member._id);
+    joinRoom(roomId, false);
   };
   return (
     <>
-      <h1>{currentRoom}</h1>
       <h1>Public Rooms</h1>
       <ListGroup>
         {room.map((room, id) => (
@@ -78,7 +82,11 @@ function Sidebar() {
             }}
           >
             {room}
-            {currentRoom !== room && <span>noti</span>}
+            {currentRoom !== room && (
+              <span className="badge rounded-pill bg-primary">
+                {user.message[room]}
+              </span>
+            )}
           </ListGroup.Item>
         ))}
       </ListGroup>
@@ -88,11 +96,30 @@ function Sidebar() {
           <ListGroup.Item
             key={member._id}
             style={{ cursor: "pointer" }}
-            active={privateMessage?._id == member?._d}
+            active={privateMessage?._id === member?._id}
             onClick={() => handleMemberMSG(member)}
-            disabled={member._id == user._id}
+            disabled={member._id === user._id}
           >
-            {member.firstname}
+            <Row>
+              <Col xs={2} className="member-status">
+                <img src={member.imageslink} className="member-status-img" alt="chat-profile-art" />
+                {member.status === "online" ? (
+                  <i className="fas fas-circle sidebar-online-status"></i>
+                ) : (
+                  <i className="fas fas-circle sidebar-offline-status"></i>
+                )}
+              </Col>
+              <Col xs={9}>
+                {member.username}
+                {member._id === user._id && " (You)"}
+                {member._id === "offline" && " (Offline)"}
+              </Col>
+              <Col xs={1}>
+                <span className="badge rounded-pill bg-primary">
+                  {user.message[orderId(member._id, user._id)]}
+                </span>
+              </Col>
+            </Row>
           </ListGroup.Item>
         ))}
       </ListGroup>

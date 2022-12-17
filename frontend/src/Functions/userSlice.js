@@ -5,8 +5,16 @@ export const userSlice = createSlice({
   name: "user",
   initialState: null,
   reducers: {
-    addNotification: (state,{payload})=>{},
-    resetNotification: (state,{payload})=>{},
+    addNotification: (state, { payload }) => {
+      if (state.message[payload]) {
+        state.message[payload] = state.message[payload] + 1;
+      } else {
+        state.message[payload] = 1;
+      }
+    },
+    resetNotification: (state, { payload }) => {
+      delete state.message[payload];
+    },
   },
   extraReducers: (builder) => {
     //save user after signup

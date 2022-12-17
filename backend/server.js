@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const app = express();
 
-const room = ["general", "tech", "Finance", "lola"];
+const room = ["general", "tech", "Finance"];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -50,9 +50,10 @@ io.on("connection", (socket) => {
     io.emit("new-user", members);
   });
 
-  socket.on("join-room", async (room) => {
-    socket.join(room);
-    let roomMessage = await getLastMessageFromRoom(room);
+  socket.on("join-room", async (newRoom,prevRoom) => {
+    socket.join(newRoom);
+    socket.leave(prevRoom)
+    let roomMessage = await getLastMessageFromRoom(newRoom);
     roomMessage = sortRoomMessageByDate(roomMessage);
     socket.emit("room-message", roomMessage);
   });
@@ -73,10 +74,10 @@ io.on("connection", (socket) => {
   });
   app.delete("/logout", async (req, res) => {
     try {
-      const { _id, newMessages } = req.body;
+      const { _id, message } = req.body;
       const user = await User.findById(_id);
       user.status = "Offline";
-      user.newMessages = newMessages;
+      user.message = message;
       await user.save();
       const members = await User.find();
       socket.broadcast.emit("new-user", members);

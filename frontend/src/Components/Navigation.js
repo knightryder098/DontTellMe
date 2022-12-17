@@ -7,13 +7,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import SettingsIcon from "@mui/icons-material/Settings";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+
 function Navigation() {
   const user = useSelector((state) => state.user);
   const [logoutUser] = useLogoutUserMutation();
   const navigate = useNavigate();
-  const handleLogout = (e) => {
+
+  const handleLogout = async (e) => {
     e.preventDefault();
-    logoutUser(user);
+    await logoutUser(user);
     navigate("/");
   };
   return (
@@ -44,7 +46,6 @@ function Navigation() {
                   <Nav.Link>chat</Nav.Link>
                 </LinkContainer>
               </div>
-              
 
               {user && (
                 <NavDropdown

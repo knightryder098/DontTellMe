@@ -9,10 +9,11 @@ import { AppContext } from "../context/appContext";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginUser, { isLoding, error }] = useLoginUserMutation();
+  const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const navigate = useNavigate();
-  const {socket}=useContext(AppContext)
+  const { socket } = useContext(AppContext);
   const user = useSelector((state) => state.user);
+
   const handleLogin = (e) => {
     e.preventDefault();
     loginUser({
@@ -21,14 +22,14 @@ function Login() {
     }).then(({ data }) => {
       if (data) {
         // console.log(data);
-        socket.emit('new-user')
+        socket.emit("new-user");
         navigate("/chat");
       }
     });
   };
 
-  if(user){
-    navigate('/chat')
+  if (user) {
+    navigate("/chat");
   }
   return (
     <>
@@ -39,7 +40,10 @@ function Login() {
             md={6}
             className="d-flex align-items-center justify-content-center flex-direction-column"
           >
-            <Form onSubmit={handleLogin}>
+            <Form
+              style={{ width: "80%", maxWidth: 500 }}
+              onSubmit={handleLogin}
+            >
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
