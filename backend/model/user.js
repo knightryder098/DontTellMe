@@ -24,7 +24,8 @@ const UserSchema = new mongoose.Schema(
       unique:[true,"Email already used!"]
     },
     password:{
-      type:String
+      type:String,
+      required:[true,"Password is required"]
     },
     imageslink:{
       type:String

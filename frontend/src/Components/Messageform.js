@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { AppContext } from "../context/appContext";
 import { useSelector } from "react-redux";
@@ -6,8 +6,9 @@ import "../css/Messageform.css";
 function Messageform() {
   const [messages, setMessages] = useState("");
   const user = useSelector((state) => state.user);
-  const { socket,message, setMessage, privateMessage, currentRoom } =
+  const { socket, message, setMessage, privateMessage, currentRoom } =
     useContext(AppContext);
+
   const getFormatedDate = () => {
     const date = new Date();
     let year = date.getFullYear();
@@ -19,12 +20,14 @@ function Messageform() {
   };
 
   const date = getFormatedDate();
-  
-    socket.off('room-messages').on('room-messages',(roomMessage)=>{
-      console.log(roomMessage);
-      setMessage(roomMessage)
-    })
 
+  socket.off("room-messages").on("room-messages", (roomMessage) => {
+    console.log(roomMessage);
+    setMessage(roomMessage);
+  });
+
+ 
+  
   const handleMessageSend = (e) => {
     e.preventDefault();
     if (!messages) return;
@@ -39,7 +42,22 @@ function Messageform() {
 
   return (
     <>
-      <div className="message_form">{date}</div>
+      <div className="message_form">
+        {user &&
+          message?.map(({ _id: date, messageByDate }, idx) => (
+            <div key={idx}>
+              <p className="alert alert-info text-center message-date-indicator">
+                {date}
+              </p>
+              {messageByDate?.map(({ content, time, from: sender }, idx) => (
+                <div className="message" key={idx}>
+                  <p>{content}</p>
+                </div>
+          ))}
+            </div>
+          ))}
+      </div>
+
       <Form onSubmit={handleMessageSend}>
         <Row>
           <Col md={11}>

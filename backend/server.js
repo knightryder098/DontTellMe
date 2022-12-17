@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const app = express();
 
-const room = ["general", "tech", "Finance"];
+const room = ["general", "tech", "Finance", "lola"];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -23,8 +23,6 @@ const io = require("socket.io")(server, {
     methods: ["GET", "POST"],
   },
 });
-
-
 
 const getLastMessageFromRoom = async (room) => {
   const roomMessage = await Message.aggregate([
@@ -60,7 +58,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message-room", async (room, content, sender, time, date) => {
-    
     const newMessage = await Message.create({
       content,
       from: sender,
@@ -74,27 +71,25 @@ io.on("connection", (socket) => {
 
     socket.broadcast.emit("notifications", room);
   });
+  app.delete("/logout", async (req, res) => {
+    try {
+      const { _id, newMessages } = req.body;
+      const user = await User.findById(_id);
+      user.status = "Offline";
+      user.newMessages = newMessages;
+      await user.save();
+      const members = await User.find();
+      socket.broadcast.emit("new-user", members);
+      res.status(200).send();
+    } catch (error) {
+      console.log(error);
+      res.status(400).send();
+    }
+  });
 });
-
-app.delete('/logout',async(req,res)=>{
-  try {
-    const {_id,newMessages}=req.body;
-    const user=await User.findById(_id);
-    user.status="Offline"
-    user.newMessages=newMessages;
-    await user.save();
-    const members=await User.find();
-    socket.broadcast.emit("new-user", members);
-    res.status(200).send()
-  } catch (error) {
-    console.log(error);
-    res.status(400).send()
-  }
-})
 
 app.get("/rooms", (req, res) => {
   res.json(room);
 });
-
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
