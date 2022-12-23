@@ -19,7 +19,7 @@ const server = require("http").createServer(app);
 const PORT = process.env.PORT || 1515;
 const io = require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: `${process.env.FRONTEND_URL}`,
     methods: ["GET", "POST"],
   },
 });
