@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../css/Login.css";
 import { useSelector } from "react-redux";
 import { AppContext } from "../context/appContext";
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -45,6 +46,7 @@ function Login() {
               onSubmit={handleLogin}
             >
               <Form.Group className="mb-3" controlId="formBasicEmail">
+              {error && <p className="alert alert-danger">{error.data}</p>}
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"
@@ -68,7 +70,7 @@ function Login() {
                 />
               </Form.Group>
               <Button variant="primary" type="submit">
-                Login
+              {isLoading ? <CircularProgress/> : "Login"}
               </Button>
               <div className="py-4">
                 <p className="text-center">

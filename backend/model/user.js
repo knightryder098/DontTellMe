@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema(
     imageslink:{
       type:String
     },
-    message:{
+    newMessages:{
       type:Object,
       default:{}
     },
@@ -67,7 +67,7 @@ UserSchema.methods.toJSON = function () {
 UserSchema.statics.findByCredentials = async function (e, p) {
   const user = await User.findOne({ email:e });
   if (!user) throw new Error("invalid user or password");
-  const isMatch = bcrypt.compare(p, user.password);
+  const isMatch = await bcrypt.compare(p, user.password);
   if (!isMatch) throw new Error("invalid password");
   return user;
 };

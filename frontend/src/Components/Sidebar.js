@@ -3,20 +3,22 @@ import { ListGroup, Col, Row } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { AppContext } from "../context/appContext";
 import { addNotification, resetNotification } from "../Functions/userSlice";
-import '../css/sidebar.css'
+import "../css/sidebar.css";
 function Sidebar() {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const {
     socket,
-    room,
-    setRoom,
-    currentRoom,
-    setCurrentRoom,
-    members,
     setMembers,
-    privateMessage,
-    setPrivateMessage,
+    members,
+    setCurrentRoom,
+    setRooms,
+    privateMemberMsg,
+    rooms,
+    messages,
+    setMessages,
+    setPrivateMemberMsg,
+    currentRoom,
   } = useContext(AppContext);
 
   const joinRoom = (room, isPublic = true) => {
@@ -24,7 +26,7 @@ function Sidebar() {
 
     socket.emit("join-room", room, currentRoom);
     setCurrentRoom(room);
-    if (isPublic) setPrivateMessage(null);
+    if (isPublic) setPrivateMemberMsg(null);
 
     //notifications
     dispatch(resetNotification(room));
@@ -38,19 +40,23 @@ function Sidebar() {
     if (user) {
       setCurrentRoom("general");
       getRoom();
+      getMessage()
       socket.emit("join-room", "general");
       socket.emit("new-user");
     }
-  }, [room,currentRoom]);
+  }, []);
 
   socket.off("new-user").on("new-user", (payload) => {
     setMembers(payload);
   });
 
+  const getMessage=()=>{
+    setMessages(messages)
+  }
   const getRoom = () => {
     fetch("http://localhost:5000/rooms")
       .then((res) => res.json())
-      .then((data) => setRoom(data));
+      .then((data) => setRooms(data));
   };
 
   const orderId = (id1, id2) => {
@@ -62,7 +68,7 @@ function Sidebar() {
   };
 
   const handleMemberMSG = (member) => {
-    setPrivateMessage(member);
+    setPrivateMemberMsg(member);
     const roomId = orderId(user._id, member._id);
     joinRoom(roomId, false);
   };
@@ -70,7 +76,7 @@ function Sidebar() {
     <>
       <h1>Public Rooms</h1>
       <ListGroup>
-        {room.map((room, id) => (
+        {rooms.map((room, id) => (
           <ListGroup.Item
             key={id}
             onClick={() => joinRoom(room)}
@@ -84,7 +90,7 @@ function Sidebar() {
             {room}
             {currentRoom !== room && (
               <span className="badge rounded-pill bg-primary">
-                {user.message[room]}
+                {user.newMessages[room]}
               </span>
             )}
           </ListGroup.Item>
@@ -94,15 +100,19 @@ function Sidebar() {
       <ListGroup>
         {members.map((member) => (
           <ListGroup.Item
-            key={member._id}
+            key={member.id}
             style={{ cursor: "pointer" }}
-            active={privateMessage?._id === member?._id}
+            active={privateMemberMsg?._id === member?._id}
             onClick={() => handleMemberMSG(member)}
             disabled={member._id === user._id}
           >
             <Row>
               <Col xs={2} className="member-status">
-                <img src={member.imageslink} className="member-status-img" alt="chat-profile-art" />
+                <img
+                  src={member.imageslink}
+                  className="member-status-img"
+                  alt="chat-profile-art"
+                />
                 {member.status === "online" ? (
                   <i className="fas fas-circle sidebar-online-status"></i>
                 ) : (
@@ -111,12 +121,12 @@ function Sidebar() {
               </Col>
               <Col xs={9}>
                 {member.username}
-                {member._id === user._id && " (You)"}
+                {member._id === user?._id && " (You)"}
                 {member._id === "offline" && " (Offline)"}
               </Col>
               <Col xs={1}>
                 <span className="badge rounded-pill bg-primary">
-                  {user.message[orderId(member._id, user._id)]}
+                  {user.newMessages[orderId(member._id, user._id)]}
                 </span>
               </Col>
             </Row>

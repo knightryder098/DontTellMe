@@ -16,8 +16,9 @@ function Signup() {
 
   const [image, setImage] = useState(null);
   const [preViewImg, setPreviewImg] = useState(null);
-  const [uploadImg, setUploadImg] = useState(false);
+  const [upladingImg, setUploadImg] = useState(false);
   const navigate = useNavigate();
+
   const validateImg = (e) => {
     const file = e.target.files[0];
     if (file.size >= 1048576) {
@@ -54,7 +55,7 @@ function Signup() {
     e.preventDefault();
     if (!image) return alert("Please Upload a profile picture!!");
     const url = await UploadImage(image);
-    console.log(url);
+
     signUpuser({
       firstname: firstName,
       lastname: LastName,
@@ -64,8 +65,7 @@ function Signup() {
       imageslink: url,
     }).then(({ data }) => {
       if (data) {
-        console.log(data);
-        navigate('/chat')
+        navigate("/chat");
       } else console.log(error);
     });
   };
@@ -102,6 +102,7 @@ function Signup() {
                   onChange={validateImg}
                 />
               </div>
+              {error && <p className="alert alert-danger">{error.data}</p>}
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control
@@ -149,7 +150,7 @@ function Signup() {
                 />
               </Form.Group>
               <Button variant="primary" type="submit">
-                {uploadImg ? "Signing you up ..." : "Signup"}
+                {upladingImg || isLoading ? "Signing you up..." : "Signup"}
               </Button>
               <div className="py-4">
                 <p className="text-center">

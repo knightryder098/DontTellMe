@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import "../css/Messageform.css";
 
 function Messageform() {
-  const [messages, setMessages] = useState("");
+  const [message, setMessage] = useState("");
   const user = useSelector((state) => state.user);
-  const { socket, message, setMessage, privateMessage, currentRoom } =
+  const { socket, currentRoom, setMessages, messages, privateMemberMsg } =
     useContext(AppContext);
 
   const messageEndRef = useRef(null);
@@ -33,32 +33,37 @@ function Messageform() {
 
   const date = getFormatedDate();
 
-  socket.off("room-messages").on("room-messages", (roomMessage) => {
-    setMessage(roomMessage);
+  socket.off("room-messages").on("room-messages", (roomMessages) => {
+    setMessages(roomMessages);
   });
 
   const handleMessageSend = (e) => {
     e.preventDefault();
-    if (!messages) return;
+    if (!message) return;
     const today = new Date();
     const minutes =
       today.getMinutes() < 10 ? "0" + today.getMinutes() : today.getMinutes();
     const time = today.getHours() + ":" + minutes;
     const roomId = currentRoom;
-    socket.emit("message-room", roomId, messages, user, time, date);
-    setMessages("");
+    socket.emit("message-room", roomId, message, user, time, date);
+    setMessage("");
   };
 
   return (
     <>
       <div className="message_form">
-        {user && privateMessage?._id && (
+        {user && !privateMemberMsg?._id && (
+          <div className="alert alert-info">
+            You are in the {currentRoom} room
+          </div>
+        )}
+        {user && privateMemberMsg?._id && (
           <>
             <div className="alert alert-info conversation-info">
               <div>
-                Your conversation with {privateMessage.username}
+                Your conversation with {privateMemberMsg.username}
                 <img
-                  src={privateMessage.imageslink}
+                  src={privateMemberMsg.imageslink}
                   className="conversation-profile-pic"
                   alt="private-member-art"
                 />
@@ -67,7 +72,7 @@ function Messageform() {
           </>
         )}
         {user &&
-          message?.map(({ _id: date, messageByDate }, idx) => (
+          messages?.map(({ _id: date, messageByDate }, idx) => (
             <div key={idx}>
               <p className="alert alert-info text-center message-date-indicator">
                 {date}
@@ -97,16 +102,15 @@ function Messageform() {
                       <p className="message-sender">
                         {sender._id === user?._id ? "You" : sender.username}
                       </p>
-                      <p className="message-content">{content}</p>
-                      <p className="message-timestamp-left">{time}</p>
                     </div>
+                    <p className="message-content">{content}</p>
+                    <p className="message-timestamp-left">{time}</p>
                   </div>
                 </div>
               ))}
-      
             </div>
           ))}
-          <div ref={messageEndRef}/>
+        <div ref={messageEndRef} />
       </div>
 
       <Form onSubmit={handleMessageSend}>
@@ -117,13 +121,13 @@ function Messageform() {
                 type="text"
                 disabled={!user}
                 placeholder="Type your message"
-                value={messages}
-                onChange={(e) => setMessages(e.target.value)}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               ></Form.Control>
             </Form.Group>
           </Col>
           <Col md={1}>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" disabled={!user}>
               ↗️
             </Button>
           </Col>

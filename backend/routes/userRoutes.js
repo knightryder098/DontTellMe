@@ -16,10 +16,11 @@ router.post("/", async (req, res) => {
       imageslink,
     });
     res.status(201).json(user);
+    console.log(`User signed up : ${user.username}`)
 
     // res.status(200).json()
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json(err.message);
     // console.log(err);
   }
 });
@@ -31,13 +32,14 @@ router.post("/login", async (req, res) => {
     // console.log(req.body);
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
+    console.log(`User logged in ${user.username}`)
     user.status = "online";
     await user.save();
     res.status(200).json(user);
     // res.sendStatus(200);
   } catch (error) {
     // console.log(error);
-    res.status(400).json(error);
+    res.status(400).json(error.message);
     
   }
 });
