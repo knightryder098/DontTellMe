@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const compression = require("compression");
 require("./connection");
 const userRoutes = require("./routes/userRoutes");
 const Message = require("./model/message");
@@ -13,6 +15,8 @@ const rooms = ["general", "tech", "Finance"];
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
+app.use(compression());
 app.use("/users", userRoutes);
 
 const server = require("http").createServer(app);
@@ -57,13 +61,13 @@ io.on("connection", (socket) => {
   socket.on("join-room", async (newRoom, prevRoom) => {
     // console.log("new room is "+ newRoom);
     // console.log("old room is " + prevRoom);
-    
+
     socket.leave(prevRoom);
     socket.join(newRoom);
-    
+
     let roomMessages = await getLastMessageFromRoom(newRoom);
     roomMessages = sortRoomMessageByDate(roomMessages);
-    
+
     socket.emit("room-messages", roomMessages);
   });
 
