@@ -61,6 +61,7 @@ function Navigation() {
                           marginRight: 10,
                           textAlign: "center",
                         }}
+                        alt='user-pic-circle-dropdown'
                       />
                       {` ${user.firstname} `}
                     </>

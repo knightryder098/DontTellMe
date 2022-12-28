@@ -36,16 +36,17 @@ function Sidebar() {
     if (currentRoom !== room) dispatch(addNotification(room));
   });
 
-  useEffect(() => {
-    if (user) {
-      setCurrentRoom("general");
-      getRoom();
-      getMessage()
-      socket.emit("join-room", "general");
-      socket.emit("new-user");
-    }
-  }, []);
-
+  // eslint-disable-next-line no-use-before-define
+  useEffect(() => { // eslint-disable-next-line no-use-before-define
+    if (user) { // eslint-disable-next-line no-use-before-define
+      setCurrentRoom("general"); // eslint-disable-next-line no-use-before-define
+      getRoom();// eslint-disable-next-line no-use-before-define
+      getMessage()// eslint-disable-next-line no-use-before-define
+      socket.emit("join-room", "general");// eslint-disable-next-line no-use-before-define
+      socket.emit("new-user");// eslint-disable-next-line no-use-before-define
+    }// eslint-disable-next-line no-use-before-define
+  }, []); // eslint-disable-next-line no-use-before-define
+// eslint-disable-next-line no-use-before-define
   socket.off("new-user").on("new-user", (payload) => {
     setMembers(payload);
   });
