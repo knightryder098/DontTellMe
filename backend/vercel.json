@@ -11,5 +11,8 @@
       "src":"/(*)",
       "dest":"/"
     }
-  ]
+  ],
+  
+    "buildCommand": "next build"
+  
 }
