@@ -37,7 +37,7 @@ function Sidebar() {
   });
 
   //lola darling
-  
+
   // eslint-disable-next-line no-use-before-define
   useEffect(() => { 
     if (user) { 
@@ -58,7 +58,7 @@ function Sidebar() {
     setMessages(messages)
   }
   const getRoom = () => {
-    fetch("http://localhost:5000/rooms")
+    fetch(`${REACT_APP_BACKEND_URL_PROD}/rooms`)
       .then((res) => res.json())
       .then((data) => setRooms(data));
   };
