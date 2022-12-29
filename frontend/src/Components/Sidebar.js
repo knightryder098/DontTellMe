@@ -36,6 +36,8 @@ function Sidebar() {
     if (currentRoom !== room) dispatch(addNotification(room));
   });
 
+  //lola darling
+  
   // eslint-disable-next-line no-use-before-define
   useEffect(() => { 
     if (user) { 
