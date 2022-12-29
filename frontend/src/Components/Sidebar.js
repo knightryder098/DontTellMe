@@ -58,7 +58,7 @@ function Sidebar() {
     setMessages(messages)
   }
   const getRoom = () => {
-    fetch(`${REACT_APP_BACKEND_URL_PROD}/rooms`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL_PROD}/rooms`)
       .then((res) => res.json())
       .then((data) => setRooms(data));
   };
