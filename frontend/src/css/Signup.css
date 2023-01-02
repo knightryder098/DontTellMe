@@ -1,4 +1,8 @@
+.sign_up_container{
+  background-color: #85dcb8;
+}
 .signup__bg{
+  margin-top: 100px;
   background-color: aqua;
   background-image: url(../assets/signup.jpg);
   height: 92vh;
@@ -8,6 +12,13 @@
   overflow-x: hidden;
 }
 
+.sign_up_form{
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 2%;
+  background-color: rgb(203, 242, 243);
+  
+}
 .sign_profile_pic_container{
   height: 100px;
   width: 100px;
@@ -32,4 +43,14 @@
   cursor: pointer;
   z-index: 99;
   border-radius: 50%;
+}
+
+
+@media screen and (max-width:480px) {
+  .signup__bg{
+    visibility: hidden;
+    height: 0px;
+  }
+ 
+
 }

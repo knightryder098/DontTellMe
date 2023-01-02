@@ -71,13 +71,17 @@ function Signup() {
   };
   return (
     <>
-      <Container>
+    <div className="sign_up_container">
+
+    
+      <Container >
         <Row>
           <Col
             md={6}
             className="d-flex align-items-center justify-content-center flex-direction-column"
           >
             <Form
+              className="sign_up_form"
               style={{ width: "80%", maxWidth: 500 }}
               onSubmit={handleSignUp}
             >
@@ -162,6 +166,7 @@ function Signup() {
           <Col md={6} className="signup__bg"></Col>
         </Row>
       </Container>
+      </div>
     </>
   );
 }

@@ -1,5 +1,8 @@
+.login_form_container{
+  background-color: #85dcb8;
+}
 .login__bg{
-  background-color: aqua;
+  /* background-color: aqua; */
   background-image: url(../assets/home_bg.jpg);
   /* background-image: image(); */
   height: 92vh;
@@ -7,4 +10,29 @@
   background-size: cover;
   background-repeat: no-repeat;
   overflow-x: hidden;
+}
+
+
+.login_form{
+  /* border: 2px solid black; */
+  padding: 15px;
+  border-radius: 2%;
+  background-color: rgb(203, 242, 243);
+}
+
+@media screen and (max-width: 480px) {
+  .login__bg{
+    visibility: hidden;
+    height: 0px
+  }
+  .login_form_smaller_size{
+    background-image: url(../assets/home_bg.jpg);
+    height: 90vh;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  position: relative;
+  }
+  
 }

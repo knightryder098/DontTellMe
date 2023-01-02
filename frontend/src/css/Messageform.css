@@ -7,7 +7,7 @@
 }
 
 .messages-output {
-  height: 80vh;
+  height: 75vh;
   border: 1px solid lightgray;
   overflow-y: scroll;
   margin-bottom: 20px;
@@ -68,4 +68,19 @@
   margin-bottom: 30px;
   border-radius: 50%;
   margin-left: 10px;
+}
+
+.message_form_send_text,.message_form_send_button{
+  /* border: 2px solid red; */
+}
+.message_input_field{
+  /* display: inline-flex; */
+  
+}
+
+@media screen and (max-width:480px) {
+  .message_input_field{
+   display: flex;
+   justify-content: space-between;
+  }
 }
