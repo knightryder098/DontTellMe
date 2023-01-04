@@ -34,14 +34,16 @@ function Login() {
   }
   return (
     <>
+    <div className='login_form_container'>
       <Container>
-        <Row>
+        <Row className="login_form_smaller_size">
           <Col md={6} className="login__bg"></Col>
           <Col
             md={6}
             className="d-flex align-items-center justify-content-center flex-direction-column"
           >
             <Form
+            className="login_form"
               style={{ width: "80%", maxWidth: 500 }}
               onSubmit={handleLogin}
             >
@@ -81,6 +83,7 @@ function Login() {
           </Col>
         </Row>
       </Container>
+      </div>
     </>
   );
 }

@@ -113,9 +113,9 @@ function Messageform() {
         <div ref={messageEndRef} />
       </div>
 
-      <Form onSubmit={handleMessageSend}>
-        <Row>
-          <Col md={11}>
+      <Form onSubmit={handleMessageSend} className="message_typing_form" >
+        <Row  className="message_input_field">
+          <Col sm={11} className='message_form_send_text'>
             <Form.Group>
               <Form.Control
                 type="text"
@@ -126,7 +126,7 @@ function Messageform() {
               ></Form.Control>
             </Form.Group>
           </Col>
-          <Col md={1}>
+          <Col sm={1} className='message_form_send_button'>
             <Button variant="primary" type="submit" disabled={!user}>
               ↗️
             </Button>

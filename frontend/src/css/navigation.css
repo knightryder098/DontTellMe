@@ -1,0 +1,23 @@
+
+
+.navbar_logo{
+   width: 75px;
+   height: 75px; 
+   border-radius: 50%; 
+   box-shadow: -9px -2px 10px 4px rgb(84, 87, 79);
+   margin-right: 15px;
+}
+
+.navbar-main{
+  
+  background-color: gainsboro;
+}
+
+.navbar_title{
+  color: black;
+  text-shadow: -1px 1px 1px black;
+}
+
+.navbar_links{
+  color: black;
+}
