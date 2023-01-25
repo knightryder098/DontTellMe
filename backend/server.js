@@ -6,7 +6,7 @@ require("./connection");
 const userRoutes = require("./routes/userRoutes");
 const Message = require("./model/message");
 const User = require("./model/user");
-require("dotenv").config();
+require("dotenv").config({ path: "../frontend/.env" });
 
 const app = express();
 
