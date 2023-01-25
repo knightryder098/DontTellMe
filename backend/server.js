@@ -20,7 +20,7 @@ app.use(compression());
 app.use("/users", userRoutes);
 
 const server = require("http").createServer(app);
-const PORT = process.env.PORT || 1515;
+const PORT = process.env.D_PORT || 1515;
 const io = require("socket.io")(server, {
   cors: {
     origin: `${process.env.FRONTEND_URL}`,
