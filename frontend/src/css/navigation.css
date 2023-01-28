@@ -10,7 +10,9 @@
 
 .navbar-main{
   
-  background-color: gainsboro;
+  /* background-color: gainsboro; */
+ 
+  border-bottom: 1px solid gray;
 }
 
 .navbar_title{
