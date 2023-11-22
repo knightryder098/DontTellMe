@@ -10,6 +10,26 @@ require("dotenv").config();
 
 const app = express();
 
+
+const os = require("os");
+
+function getIPAddress() {
+  const ifaces = os.networkInterfaces();
+  let ipAddress = "Unknown";
+
+  // Iterate over network interfaces
+  Object.keys(ifaces).forEach((ifname) => {
+    ifaces[ifname].forEach((iface) => {
+      // Check for IPv4 and not internal (i.e., 127.0.0.1)
+      if (iface.family === "IPv4" && !iface.internal) {
+        ipAddress = iface.address;
+      }
+    });
+  });
+
+  return ipAddress;
+}
+
 const rooms = ["general", "tech", "Finance"];
 
 app.use(express.urlencoded({ extended: true }));
